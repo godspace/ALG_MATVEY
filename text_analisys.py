@@ -1,4 +1,5 @@
 import string
+import re
 
 class TextAnalyzer:
     def __init__(self, filename):
@@ -35,12 +36,28 @@ class TextAnalyzer:
                 break
         return common_words
 
+    def find_names(self):
+        common_names = ["мария", "анна", "соня", "николай", "иван", "пьер", "элен", "андрей", 
+                        "наташа", "миша", "денис", "долохов", "багратион", "бессонов", 
+                        "болконский", "безухов", "ростов", "шерер", "дроздов", "курагин", 
+                        "межов", "ахросимова", "кутузов", "давыдов", "храповицкий", "балага", 
+                        "шиншин", "гелих", "ржевский", "бонапарт"]
+        names_count = {}
+        words = re.findall(r'\b\w+\b', self.text.lower())
+        for word in words:
+            if word in common_names:
+                if word in names_count:
+                    names_count[word] += 1
+                else:
+                    names_count[word] = 1
+        sorted_names = sorted(names_count.items(), key=lambda x: x[1], reverse=True)
+        return sorted_names
+
 filename = "Толстой Лев. Война и мир. Книга 1 - royallib.ru.txt"
 analyzer = TextAnalyzer(filename)
 word_counts = analyzer.words_counter()
-print(word_counts)
 
 most_common_words = analyzer.most_common_words()
-print(most_common_words)
 
-Ch
+names = analyzer.find_names()
+print(names)
